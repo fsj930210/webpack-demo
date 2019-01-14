@@ -1,7 +1,7 @@
 const Router = require("koa-router");
-const router = new Router({prefix: "/api"});
+const router = new Router();
 
-router.get("/share", ctx => {
+router.get("/api/share", ctx => {
   const url = `${ctx.protocol}://${ctx.host}/#${ctx.path}?${ctx.querystring}`;
   ctx.redirect(url);
 })
