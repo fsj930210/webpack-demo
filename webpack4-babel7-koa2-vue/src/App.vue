@@ -2,10 +2,7 @@
   <div id="app">
     <router-link to="/">Home</router-link> |
     <router-link to="/login">Login</router-link> |
-    <router-link to="/exception">Exception</router-link>|
-    <router-link to="/ex">Ex</router-link>|
-    <router-link to="/ex">Tx</router-link>|
-    <router-link to="/ex">Fx</router-link>
+    <router-link to="/exception">Exception</router-link>
     <router-view/>
   </div>
 </template>

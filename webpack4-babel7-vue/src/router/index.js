@@ -11,6 +11,11 @@ export default new Router({
       component: () => import('@/views/Home')
     },
     {
+      path: '/topic/:topicId',
+      name: 'TopicDetail',
+      component: () => import('@/views/TopicDetail')
+    },
+    {
       path: '/login',
       name: 'Login',
       component: () => import('@/views/Login')

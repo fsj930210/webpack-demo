@@ -1,6 +1,8 @@
 <template>
   <div class="table">
-    <slot name="table-header" :searchForm="handleSearch" :resetForm="handleReset"></slot>
+    <div class="table-header">
+      <slot name="table-header" :searchForm="handleSearch"></slot>
+    </div>
     <div class="table-box">
       <el-table
         :data="tableData"
@@ -30,23 +32,38 @@ export default {
       default: true
     },
     api: Function,
-    params: Object,
-    data: Array
+    initParams: Object,
+    prefix: {
+      required: true,
+      default: ''
+    }
   },
   data () {
     return {
       currentPage: 1,
       pageSize: 10,
-      tableData: []
+      tableData: [],
+      params: {}
     }
   },
   created () {
     this.fetchData()
   },
+  mounted () {
+    this.$on(`${this.prefix}-reload-table-data`, () => {
+      this.fetchData({ page: 1, limit: 10 })
+    })
+    this.$on(`${this.prefix}-refresh-table-data`, () => {
+      this.fetchData({ page: this.currentPage, limit: this.pageSize, ...this.params })
+    })
+  },
+  destroyed () {
+    this.$off(`${this.prefix}-reload-table-data`)
+    this.$off(`${this.prefix}-refresh-table-data`)
+  },
   methods: {
-    async fetchData (params) {
-      params = { ...params, ...this.params }
-      this.$emit('table-data', [{ name: 'aaaa' }, { name: 'bbb' }, { name: 'ccc' }])
+    async fetchData (params = { page: this.currentPage, limit: this.pageSize }) {
+      params = { ...params, ...this.initParams }
       try {
         const data = await this.api(params)
         this.tableData = data
@@ -58,30 +75,25 @@ export default {
     },
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
-      this.fetchData({ page: this.currentPage, pageSize: pageSize, ...this.params })
+      this.fetchData({ page: this.currentPage, limit: pageSize, ...this.params })
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      this.fetchData({ page: currentPage, pageSize: this.pageSize, ...this.params })
+      this.fetchData({ page: currentPage, limit: this.pageSize, ...this.params })
     },
     handleSearch (params) {
-      console.log(params)
-      this.fetchData({ page: 1, size: this.pageSize, ...params })
-    },
-    handleReset () {
-      this.fetchData({ page: 1, pageSize: 10 })
-    },
-    refreshData () {
-      this.tableDta = this.data
-    },
-    refreshDataAsync () {
-
+      this.params = params
+      this.currentPage = 1
+      this.fetchData({ page: 1, limit: this.pageSize, ...params })
     }
   }
 }
 </script>
 <style>
+  .table-header{
+    margin: 20px auto;
+  }
   .table-box{
-    margin-bottom: 20px;
+    margin: 20px auto;
   }
 </style>
