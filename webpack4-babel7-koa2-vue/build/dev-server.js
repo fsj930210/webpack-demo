@@ -40,11 +40,7 @@ module.exports = function (app, cb) {
   const webpackHotMiddleware = hotMiddleware(compiler, {
     log: () => {}
   })
-  // force page reload when html-webpack-plugin template changes
-  // compiler.hooks.afterEmit.tapAsync('html-webpack-plugin', function (compilation) {
-  //   webpackHotMiddleware.publish({ action: 'reload' })
-  //   cb()
-  // })
+  
   app.use(webpackHotMiddleware)
 
   webpackDevMiddleware.waitUntilValid(() => {

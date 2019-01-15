@@ -1,5 +1,5 @@
 module.exports = async (ctx, next) => {
-  ctx.error = ({ code = 400, message = 'Internal server error', data = [], status = 400}) => {
+  ctx.error = ({ code = 400, message = 'Internal server error', data = [], status = 400 }) => {
     ctx.status = status
     ctx.body = { code, message, data }
   }
