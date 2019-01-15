@@ -1,40 +1,44 @@
 const path = require("path");
-const fs = require("fs")
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const cors = require("koa2-cors");
 const historyApi = require("koa2-history-api");
 const serve = require("koa-static");
 const mount = require("koa-mount");
-const logger = require('koa-logger');
 const ip = require("ip").address();
 const resoponseMiddleware = require("./middlewares/response");
-const apiRouter = require("./routes");
+const router = require("./routes");
 
 const app = new Koa();
 const isProd = process.env.NODE_ENV === "production";
-const port = process.env.PORT || 6300;
-const resolve = file => path.resolve(__dirname, file)
+const port = process.env.PORT || 3496;
+const uri = `http://${ip}:${port}`;
 
-app.use(logger());
+app.use(historyApi({ whiteList: ["/api", "/public", "/pages"] }));
+// app.use(serve(path.join(__dirname, "./dist")));
+// app.use(mount("/public", serve(path.join(__dirname, "./public"))));
+// app.use(mount("/app", serve(path.join(__dirname, "./dist/app"))));
+// app.use(mount("/pages", serve(path.join(__dirname, "./dist/pages"))));
 app.use(bodyParser());
 app.use(resoponseMiddleware);
 app.use(
   cors({
     allowMethods: ["GET", "POST", "DELETE", "PATCH", "PUT", "OPTIONS"],
-    allowHeaders: ["Origin", "Content-Type", "Authorization", "Accept", "Cookie", "User-Agent", "X-Requested-With", "Connection"]
+    allowHeaders: [
+      "Origin",
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "Cookie",
+      "User-Agent",
+      "X-Requested-With",
+      "Connection"
+    ]
   })
 );
+app.use(router.routes()).use(router.allowedMethods());
 
-app.use(mount("/public", serve(resolve("./public"))));
-
-app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
-
-app.use(historyApi({ whiteList: ["/api"] }));
-
-if (isProd) {
-  app.use(serve(resolve('./dist')));
-} else {
+if (!isProd) {
   const webpack = require("webpack");
   const webpackConfig = require("@vue/cli-service/webpack.config.js");
   const { devMiddleware, hotMiddleware } = require("koa-webpack-middleware");
