@@ -36,9 +36,8 @@ if (isProd) {
   app.use(serve(resolve('./dist')));
 } else {
   const webpack = require("webpack");
-  const webpackConfig = require("@vue/cli-service/webpack.config.js");
   const { devMiddleware, hotMiddleware } = require("koa-webpack-middleware");
-  webpackConfig.entry.app.unshift('webpack-hot-middleware/client');
+  const webpackConfig = require("./build/webpack.dev.conf");
   const compiler = webpack(webpackConfig);
   const webpackHotMiddlewrare = hotMiddleware(compiler);
   const webpackDevMiddleware = devMiddleware(compiler, {
