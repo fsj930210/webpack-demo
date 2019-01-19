@@ -1,0 +1,177 @@
+// 设置箭头
+@mixin setArrow($direction, $width, $height, $borderWidth, $borderColor) {
+  display: inline-block;
+  width: $width;
+  height: $height;
+  border-width: $borderWidth $borderWidth 0 0;
+  border-color: $borderColor;
+  border-style: solid;
+  @if $direction == top {
+    transform: rotate(-45deg);
+  } @else if $direction == right {
+    transform: rotate(45deg);
+  } @else if $direction == bottom {
+    transform: rotate(135deg);
+  } @else if $direction == left {
+    transform: rotate(-135deg);
+  }
+}
+
+// 移动端1px
+@mixin setTopLine($borderColor:#c7c7c7) {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid $borderColor;
+  color: $borderColor;
+  transform-origin: 0 0;
+  transform: scaleY(0.5);
+}
+
+@mixin setBottomLine($borderColor:#c7c7c7) {
+  content: " ";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  border-bottom: 1px solid $borderColor;
+  color: $borderColor;
+  transform-origin: 0 0;
+  transform: scaleY(0.5);
+}
+
+@mixin setLeftLine($borderColor:#c7c7c7) {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  border-left: 1px solid $borderColor;
+  color: $borderColor;
+  transform-origin: 0 0;
+  transform: scaleX(0.5);
+}
+
+@mixin setRightLine($borderColor:#c7c7c7) {
+  content: " ";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  border-right: 1px solid $borderColor;
+  color: $borderColor;
+  transform-origin: 0 0;
+  transform: scaleX(0.5);
+}
+
+@mixin set1pxBorder ($borderColor: #c7c7c7) {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid $borderColor;
+  width: 200%;
+  height: 200%;
+  transform: scale(.5);
+  transform-origin: left top;
+}
+
+//按钮快捷设置
+@mixin button($width: 100px, $height: 30px, $font: 14px, $color: #000, $bgColor: #fff, $borderColor: #ddd) {
+  margin: 0 auto;
+  text-align: center;
+  width: $width;
+  height: $height;
+  line-height: $height;
+  font-size: $font;
+  color: $color;
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+  background-color: $bgColor;
+}
+
+//单行文本溢出显示省略号
+@mixin ellipsis($w:auto) {
+  width: $w;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+// 多行文本溢出显示省略号
+@mixin ellipsisLn($line) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+}
+
+@mixin textWrap() {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+//连字符处理
+@mixin hyphens() {
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+@mixin vCenter {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%)
+}
+
+@mixin lCenter {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0)
+}
+
+@mixin triangle($color: bule, $direction: bottom, $borderTopWidth: 7px, $borderRightWidth: 7px, $borderBottomWidth: 7px,$borderLeftWidth: 7px) {
+  &:after {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    @if ($direction == right) {
+      border-left: $borderLeftWidth solid $color;
+      border-top: $borderTopWidth solid transparent;
+      border-right: $borderRightWidth solid transparent;
+      border-bottom: $borderBottomWidth solid transparent;
+    } @else if ($direction == left) {
+      border-left: $borderLeftWidth solid transparent;
+      border-top: $borderTopWidth solid transparent;
+      border-right: $borderRightWidth solid $color;
+      border-bottom: $borderBottomWidth solid transparent;
+    } @else if ($direction == top) {
+      border-left: $borderLeftWidth solid transparent;
+      border-top: $borderTopWidth solid transparent;
+      border-right: $borderRightWidth solid transparent;
+      border-bottom: $borderBottomWidth solid $color;
+    } @else if ($direction == bottom) {
+      border-left: $borderLeftWidth solid transparent;
+      border-top: $borderTopWidth solid $color;
+      border-right: $borderRightWidth solid transparent;
+      border-bottom: $borderBottomWidth solid transparent;
+    }
+  }
+}
+
+@mixin flex($direction: row, $wrap: nowrap, $justify: flex-start, $align: center) {
+  display: flex;
+	flex-direction: $direction;
+	flex-wrap: nowrap;
+	justify-content: $justify;
+  align-items: $align
+}

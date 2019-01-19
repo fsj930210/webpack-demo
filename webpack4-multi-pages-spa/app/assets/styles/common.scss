@@ -1,0 +1,111 @@
+@import "./reset.scss";
+html {
+  font-family: -apple-system, "PingFangSC-Regular", "Microsoft YaHei", Helvetica, Hiragino Sans GB, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/**
+ * view-port list:
+320x480
+320x568
+320x570
+360x592
+360x598
+360x604
+360x640
+360x720
+375x667
+375x812
+393x699
+412x732
+414x736
+480x854
+540x960
+640x360
+720x1184
+720x1280
+800x600
+1024x768
+1080x1812
+1080x1920
+ */
+$viewportList: 320, 360, 375, 393, 412, 414, 480, 540, 640, 720, 768;
+@for $i from 1 through length($viewportList) {
+  $item: nth($viewportList, $i);
+  @if ($i + 1) > length($viewportList){
+    $next: nth($viewportList, $i) !global;
+  } @else {
+    $next: nth($viewportList, $i + 1) !global;
+  }
+  $min: $item + 1;
+  @if $i == 1 {
+    @media screen and (max-width: $item * 1px) {
+      html {
+        font-size: ($item / 750 ) * 100px;
+        font-size: -webkit-calc(13.33333333vw);
+        font-size: calc(13.33333333vw);
+      }
+    }
+  }
+  @media screen and (min-width: $min * 1px) and (max-width: $next * 1px) {
+    html {
+      font-size: ($next / 750) * 100px;
+      font-size: -webkit-calc(13.33333333vw);
+      font-size: calc(13.33333333vw);
+    }
+  }
+}
+@media screen and (min-width: 769px){
+  html body {
+    width: 768px;
+    margin: 0 auto;
+  }
+}
+
+html *, *:after, *:before{
+  box-sizing: border-box;
+  outline: 0;
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 768px;
+  font-size: 14px;
+  line-height: 1;
+  color: #333;
+  overflow-x: hidden;
+}
+
+.inline-block{
+  display: inline-block;
+}
+
+.fl{
+  float: left;
+}
+
+.fr{
+  float: right;
+}
+
+.clearfix:after{
+  content: '';
+  display: block;
+  height: 0;
+  font-size: 0;
+  clear: both;
+  visibility: hidden;
+}
+.fixed{
+  position: fixed;
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+}
