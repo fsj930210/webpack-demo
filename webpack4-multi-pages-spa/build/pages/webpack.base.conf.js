@@ -4,7 +4,7 @@ const glob = require("glob");
 const HtmlWebpackPlugin = require("html-webpack-plugin"); // html模板
 const CopyWebpackPlugin = require("copy-webpack-plugin"); // 静态资源输出
 const rules = require("./webpack.rules.conf.js");
-
+const isProd = process.env.NODE_ENV === "production";
 const getHtmlConfig = function (name, chunks) {
   return {
     template: `./multi-pages/pages/${name}/index.html`,
@@ -27,6 +27,7 @@ function getEntry () {
   glob.sync("./multi-pages/pages/**/index.js").forEach(function (fileDir) {
     let pathObj = path.parse(fileDir);
     let directoryName = pathObj.dir.match(/\/\w+$/g)[0].split("/")[1];
+    // entry[directoryName] = isProd ? [fileDir] : ["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true", fileDir]; // node跑需要
     entry[directoryName] = [fileDir];
   });
   return entry;
@@ -74,8 +75,8 @@ module.exports = {
     }),
     // 静态资源输出
     new CopyWebpackPlugin([{
-      from: path.resolve(process.cwd(), "multi-pages/assets"),
-      to: "./assets",
+      from: path.resolve(process.cwd(), "multi-pages/assets/images"),
+      to: "./img",
       ignore: [".*"]
     }])
   ]

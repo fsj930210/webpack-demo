@@ -53,6 +53,6 @@ const rules = [{
 },
 {
   test: /\.html$/,
-  use: ["html-withimg-loader"] // html中的img标签
+  use: ["html-withimg-loader", "ejs-loader"] // html中的img标签
 }];
 module.exports = rules;

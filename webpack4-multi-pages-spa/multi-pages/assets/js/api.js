@@ -1,6 +1,6 @@
 const Resource = require("./create-api");
 const stringify = require("qs").stringify;
-const { api } = Resource;
+const { api, apiLocal } = Resource;
 
 // ===========================主题相关========================
 
@@ -17,5 +17,10 @@ export function getTopicById (topicId) {
 // =========================用户相关=========================
 
 export function createTopic (params = {}) {
-  return api.post("topics", stringify(params));
+  return api.post("/topics", stringify(params));
+}
+
+// 测试本地node api
+export function getLocalUser (id) {
+  return apiLocal.get(`/user/${id}`);
 }

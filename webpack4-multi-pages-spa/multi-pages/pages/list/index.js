@@ -1,4 +1,4 @@
-import { getTopics } from "@/assets/js/api";
+import { getTopics, getLocalUser } from "@/assets/js/api";
 import "@/assets/styles/reset.scss";
 import "@/assets/styles/common.scss";
 import "./index.scss";
@@ -15,4 +15,9 @@ async function render () {
   }
 }
 render();
+async function testLocalApi () {
+  const user = await getLocalUser(1);
+  console.log(user);
+}
+testLocalApi();
 console.log("支付页面");

@@ -19,3 +19,6 @@ npm run build
 ```
 npm run lint
 ```
+```
+ "dev:pages": "cross-env NODE_ENV=development DEV_ENV=pages nodemon app.js", // 用node跑的配置
+```

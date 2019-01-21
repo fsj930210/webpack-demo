@@ -7,11 +7,14 @@ const serve = require("koa-static");
 const mount = require("koa-mount");
 const logger = require('koa-logger');
 const ip = require("ip").address();
+// const Router = require("koa-router");
 const resoponseMiddleware = require("./middlewares/response");
 const apiRouter = require("./routes");
 
+// const router = new Router();
 const app = new Koa();
 const isProd = process.env.NODE_ENV === "production";
+// const isAppdev = process.env.DEV_ENV === "app";
 const port = process.env.PORT || 6600;
 const resolve = file => path.resolve(__dirname, file);
 
@@ -24,19 +27,19 @@ app.use(
     allowHeaders: ["Origin", "Content-Type", "Authorization", "Accept", "Cookie", "User-Agent", "X-Requested-With", "Connection"]
   })
 );
-
 app.use(mount("/public", serve(resolve("./public"))));
 
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
-
 app.use(historyApi({ whiteList: ["/api", "/pages"] }));
 
 if (isProd) {
-  app.use(serve(resolve("./dist/app")));
-  app.use(mount("/pages", serve(resolve("./dist/pages"))));
+  app.use(serve(resolve("./dist/app"))); // 真实环境请用nginx
+  app.use(mount("/pages", serve(resolve("./dist/pages")))); // 真实环境请用nginx
 } else {
+  // app.use(mount("/pages", serve(resolve("./dist/pages"))));
   const webpack = require("webpack");
   const { devMiddleware, hotMiddleware } = require("koa-webpack-middleware");
+  // const webpackConfig = isAppdev ? require("./build/app/webpack.dev.conf") : require("./build/pages/webpack.dev.conf");
   const webpackConfig = require("./build/app/webpack.dev.conf");
   const compiler = webpack(webpackConfig);
   const webpackHotMiddlewrare = hotMiddleware(compiler);
@@ -49,6 +52,29 @@ if (isProd) {
     },
     noInfo: false
   });
+  
+  // ==================== 使用node来跑多页应用 ======================
+  // if (!isAppdev) {
+  //   compiler.hooks.done.tap("html-webpack-plugin", () => {
+  //     router.get("/pages/*.html", ctx => {
+  //       ctx.redirect(`/${ctx.params[0]}.html`);
+  //     });
+  //     router.get("/*.html", ctx => {
+  //       let result;
+  //       const fs = webpackDevMiddleware.fileSystem;
+  //       const readFile = file => fs.readFileSync(path.join(webpackConfig.output.path, file), 'utf-8')
+  //       try {
+  //         result = readFile(`/${ctx.params[0]}.html`);
+  //       } catch (err) {
+  //         result = err.toString();
+  //       }
+  //       ctx.type = "html";
+  //       ctx.body = result;
+  //     });
+  //   });
+  // }
+  // app.use(router.routes()).use(router.allowedMethods());
+
   app.use(webpackDevMiddleware);
   app.use(webpackHotMiddlewrare);
   webpackDevMiddleware.waitUntilValid(() => {
